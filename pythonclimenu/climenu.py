@@ -272,19 +272,22 @@ def menu(
         sys.stdout.write('\n')
 
     key = None
+    from wcwidth import wcswidth
     while(key != _Keys.SELECT):
         if(multiple_colors_for_options):
             for line, option in enumerate(options):
+                gap=wcswidth(option)-len(option)    # for wide character, such as unicode
                 if(line + vertical_spacing == cursor_height):
-                    print(" " + ansi_cursor_color + ansi_options_color[line] + option.center(_TERMINAL_WIDTH - 1) + "\033[0m")
+                    print(" " + ansi_cursor_color + ansi_options_color[line] + (" "*gap+option).center(_TERMINAL_WIDTH - 1-gap*2) + "\033[0m")
                 else:
-                    print(" " + ansi_options_color[line] + option.center(_TERMINAL_WIDTH - 1) + "\033[0m")
+                    print(" " + ansi_options_color[line] + (" "*gap+option).center(_TERMINAL_WIDTH - 1-gap*2) + "\033[0m")
         else:
             for line, option in enumerate(options):
+                gap=wcswidth(option)-len(option)    # for wide character, such as unicode
                 if(line + vertical_spacing == cursor_height):
-                    print(" " + ansi_cursor_color + ansi_options_color + option.center(_TERMINAL_WIDTH - 1) + "\033[0m")
+                    print(" " + ansi_cursor_color + ansi_options_color + (" "*gap+option).center(_TERMINAL_WIDTH - 1-gap*2) + "\033[0m")
                 else:
-                    print(" " + ansi_options_color + option.center(_TERMINAL_WIDTH - 1) + "\033[0m")
+                    print(" " + ansi_options_color + (" "*gap+option).center(_TERMINAL_WIDTH - 1-gap*2) + "\033[0m")
 
         if(os.name == 'nt'):
             key = msvcrt.getwch()
