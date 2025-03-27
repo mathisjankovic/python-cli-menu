@@ -2,7 +2,7 @@
 
 `python-cli-menu` is a simple cross-plateform Python module that allows you to easilly create pretty custom menus in console. Customize the title, options, every colors and initial cursor position as you wish. Use arrows keys to navigate through the menu and enter key to select an option.
 
-![menu screen](menu.png)
+![menu screen](assets/menu.png)
 
 <p align="center">
     <img src="https://img.shields.io/badge/version-1.9-d" alt="version badge"/>
