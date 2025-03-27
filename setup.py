@@ -20,6 +20,7 @@ setup(
     packages = find_packages(),
     keywords = ["python", "menu", "console", "cli", "command", "line"],
     url = "https://github.com/MathisJANKOVIC/py-cli-menu",
+    install_requires=['wcwidth'],
     classifiers = [
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3",

@@ -43,6 +43,13 @@ def _ansibgcolor(color: str | tuple[int, int, int]):
         else:
             return f"\033[48;2;{color[0]};{color[1]};{color[2]}m"
 
+# add padding to wide characters,such as unicode
+def pad_wc(in_str:str)->(str,int):
+    from wcwidth import wcswidth
+    gap=wcswidth(in_str)-len(in_str)
+    new_str=" "*(gap//2)+in_str+" "*(gap-gap//2)
+    return new_str, gap 
+
 
 def menu(
     title: str | Sequence[str],
@@ -259,32 +266,37 @@ def menu(
         os.system("clear")
 
     if(type(title) is str):
+        new_title, gap=pad_wc(title)
         print('\n'*(vertical_spacing - 3))
-        print(" " + ansi_title_color + title.center(_TERMINAL_WIDTH - 1) + '\n\n')
+        print(" " + ansi_title_color + new_title.center(_TERMINAL_WIDTH - 1-gap) + '\n\n')
     else:
         print('\n'*(vertical_spacing - len(title) - 1))
         if(multiple_colors_for_title):
             for i, line in enumerate(title):
-                print(" " + ansi_title_color[i] + line.center(_TERMINAL_WIDTH - 1))
+                new_line, gap=pad_wc(line)
+                print(" " + ansi_title_color[i] + new_line.center(_TERMINAL_WIDTH - 1-gap))
         else:
             for line in title:
-                print(" " + ansi_title_color + line.center(_TERMINAL_WIDTH - 1))
+                new_line, gap=pad_wc(line)
+                print(" " + ansi_title_color + new_line.center(_TERMINAL_WIDTH - 1-gap))
         sys.stdout.write('\n')
 
     key = None
     while(key != _Keys.SELECT):
         if(multiple_colors_for_options):
             for line, option in enumerate(options):
+                new_option, gap=pad_wc(option)
                 if(line + vertical_spacing == cursor_height):
-                    print(" " + ansi_cursor_color + ansi_options_color[line] + option.center(_TERMINAL_WIDTH - 1) + "\033[0m")
+                    print(" " + ansi_cursor_color + ansi_options_color[line] + new_option.center(_TERMINAL_WIDTH - 1-gap) + "\033[0m")
                 else:
-                    print(" " + ansi_options_color[line] + option.center(_TERMINAL_WIDTH - 1) + "\033[0m")
+                    print(" " + ansi_options_color[line] + new_option.center(_TERMINAL_WIDTH - 1-gap) + "\033[0m")
         else:
             for line, option in enumerate(options):
+                new_option, gap=pad_wc(option)
                 if(line + vertical_spacing == cursor_height):
-                    print(" " + ansi_cursor_color + ansi_options_color + option.center(_TERMINAL_WIDTH - 1) + "\033[0m")
+                    print(" " + ansi_cursor_color + ansi_options_color + new_option.center(_TERMINAL_WIDTH - 1-gap) + "\033[0m")
                 else:
-                    print(" " + ansi_options_color + option.center(_TERMINAL_WIDTH - 1) + "\033[0m")
+                    print(" " + ansi_options_color + new_option.center(_TERMINAL_WIDTH - 1-gap) + "\033[0m")
 
         if(os.name == 'nt'):
             key = msvcrt.getwch()
